@@ -1,1 +1,17 @@
 <p>login works!</p>
+
+<form [formGroup]="loginForm">
+
+   
+    <label for="e">Ingrese Correo</label>
+    <input type="email" formControlName="email">
+    <br>
+    <label for="p">Ingrese Contraseña</label>
+    <input type="password" formControlName="password">
+    <br>
+    
+    <button type="button" (click)="funLogin()">Ingresar</button>
+</form>
+
+<hr>
+{{ loginForm.value | json }}
