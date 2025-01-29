@@ -3,6 +3,7 @@ import { InicioComponent } from './web/inicio/inicio.component';
 import { ContactosComponent } from './web/contactos/contactos.component';
 import { ServiciosComponent } from './web/servicios/servicios.component';
 import { LoginComponent } from './auth/login/login.component';
+import { AppLayout } from './layout/component/app.layout';
 
 export const routes: Routes = [
     {
@@ -29,6 +30,13 @@ export const routes: Routes = [
     },
     {
         path: 'admin',
-        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+        component: AppLayout,
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+            }
+        ]
+
     }
 ];
