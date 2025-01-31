@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-perfil',
@@ -9,4 +10,22 @@ import { Component } from '@angular/core';
 })
 export class PerfilComponent {
 
+  perfil: any = {}
+
+  authService = inject(AuthService)
+
+  constructor(){
+    this.funGetPerfil()
+  }
+
+  funGetPerfil(){
+    this.authService.perfil().subscribe(
+      (resp) => {
+        this.perfil = resp;
+      },
+      (error) => {
+        alert("Error al recuperar el Perfil")
+      },
+    )
+  }
 }
