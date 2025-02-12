@@ -15,6 +15,10 @@ import { PedidoCreateComponent } from './components/pedido/pedido-create/pedido-
 import { PedidoListaComponent } from './components/pedido/pedido-lista/pedido-lista.component';
 import { PedidoMostrarComponent } from './components/pedido/pedido-mostrar/pedido-mostrar.component';
 import { ClienteComponent } from './components/pedido/cliente/cliente.component';
+import { ChipModule } from 'primeng/chip';
+import { ToolbarModule } from 'primeng/toolbar';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @NgModule({
   declarations: [
@@ -34,7 +38,11 @@ import { ClienteComponent } from './components/pedido/cliente/cliente.component'
     TableModule,
     ButtonModule,
     DialogModule,
-    InputTextModule
+    InputTextModule,
+    ChipModule,
+    ToolbarModule,
+    IconFieldModule,
+    InputIconModule
   ]
 })
 export class AdminModule { }

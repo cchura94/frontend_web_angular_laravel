@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-producto',
@@ -9,4 +10,23 @@ import { Component } from '@angular/core';
 })
 export class ProductoComponent {
 
+
+  @ViewChild('dt') dt!: Table;
+  productos: any[] = [];
+  // cols!: Column[];
+
+  openNew(){
+
+  }
+  
+  exportCSV(ev: any) {
+    this.dt.exportCSV();
+  }
+
+   editProduct(product: any){
+
+  }
+   deleteProduct(product:any){
+
+  }
 }
