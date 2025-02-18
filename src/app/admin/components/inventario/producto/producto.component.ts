@@ -1,6 +1,8 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ProductoService } from '../../../services/producto.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CategoriaService } from '../../../services/categoria.service';
 
 interface Column {
   field: string;
@@ -16,7 +18,17 @@ interface Column {
 })
 export class ProductoComponent {
 
+  productoForm = new FormGroup({
+      // id: new FormControl(-1),
+      nombre: new FormControl('', [Validators.required]),
+      categoria_id: new FormControl('', [Validators.required]),
+      precio: new FormControl(''),
+      stock: new FormControl(''),
+      descripcion: new FormControl(''),
+  });
+
   productoService = inject(ProductoService)
+  categoriaService = inject(CategoriaService)
 
   @ViewChild('dt') dt!: Table;
   productos: any[] = [];
@@ -26,13 +38,19 @@ export class ProductoComponent {
   totalRecords: number = 6;
 
   loading: boolean = false;
+  productDialog: boolean = false;
+  submitted: boolean = false;
+
+  categorias: any[] = [];
+  imagen_seleccionado: any = null;
 
   constructor(){
-    this.getProductos()
+    this.getProductos();
+    this.getCategorias();
   }
 
   openNew(){
-
+    this.productDialog = true;
   }
 
   cargarProductos(event: any){
@@ -59,6 +77,14 @@ export class ProductoComponent {
       }
     )
   }
+
+  getCategorias(){
+this.categoriaService.listar().subscribe(
+  (res: any) => {
+    this.categorias = res;
+  }
+)
+  }
   
   exportCSV(ev: any) {
     this.dt.exportCSV();
@@ -69,5 +95,40 @@ export class ProductoComponent {
   }
    deleteProduct(product:any){
 
+  }
+
+  hideDialog(){
+
+  }
+
+  saveProduct(){
+
+    let nombre = this.productoForm.value.nombre;
+    let precio = this.productoForm.value.precio;
+    let stock = this.productoForm.value.stock;
+    let categoria_id = this.productoForm.value.categoria_id;
+    let descripcion = this.productoForm.value.descripcion;
+    
+    const formData = new FormData();
+    formData.append("nombre", `${nombre}`);
+    formData.append("precio", `${precio}`);
+    formData.append("stock", `${stock}`);
+    formData.append("categoria_id", `${categoria_id}`);
+    formData.append("descripcion", `${descripcion}`);
+    formData.append("imagen", this.imagen_seleccionado);
+
+    this.productoService.guardar(formData).subscribe(
+      (res) => {
+        console.log("Producto registrado");
+      }
+    )
+    
+
+
+  }
+
+  funSeleccionarImagen(ev: any){
+    console.log(ev.target.files[0]);
+    this.imagen_seleccionado = ev.target.files[0];
   }
 }

@@ -16,7 +16,7 @@ export class CategoriaComponent {
   visible: boolean = false;
 
   categoriaForm = new FormGroup({
-      id: new FormControl(-1),
+      id: new FormControl(''),
       nombre: new FormControl(''),
       detalle: new FormControl(''),
   });
@@ -39,7 +39,7 @@ export class CategoriaComponent {
 
   funGuardar(){
     if(this.categoriaForm.value.id){
-      this.categoriaService.modificar(this.categoriaForm.value.id, this.categoriaForm.value).subscribe(
+      this.categoriaService.modificar(this.categoriaForm.value).subscribe(
         (data: any) => {
           console.log(data);
           this.categoriaForm.reset();

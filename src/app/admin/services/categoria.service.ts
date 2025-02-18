@@ -25,8 +25,8 @@ export class CategoriaService {
     return this.http.get(`${this.urlBase}/categoria/${id}`);
   }
 
-  modificar(id:number, datos:any){
-    return this.http.put(`${this.urlBase}/categoria/${id}`, datos);
+  modificar(datos:any){
+    return this.http.put(`${this.urlBase}/categoria/${datos.id}`, datos);
   }
 
   eliminar(id:number){
