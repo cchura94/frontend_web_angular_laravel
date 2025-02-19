@@ -12,23 +12,22 @@ interface Column {
 @Component({
   selector: 'app-producto',
   standalone: false,
-  
+
   templateUrl: './producto.component.html',
-  styleUrl: './producto.component.scss'
+  styleUrl: './producto.component.scss',
 })
 export class ProductoComponent {
-
   productoForm = new FormGroup({
-      // id: new FormControl(-1),
-      nombre: new FormControl('', [Validators.required]),
-      categoria_id: new FormControl('', [Validators.required]),
-      precio: new FormControl(''),
-      stock: new FormControl(''),
-      descripcion: new FormControl(''),
+    id: new FormControl(''),
+    nombre: new FormControl('', [Validators.required]),
+    categoria_id: new FormControl('', [Validators.required]),
+    precio: new FormControl('', Validators.required),
+    stock: new FormControl('', Validators.required),
+    descripcion: new FormControl(''),
   });
 
-  productoService = inject(ProductoService)
-  categoriaService = inject(CategoriaService)
+  productoService = inject(ProductoService);
+  categoriaService = inject(CategoriaService);
 
   @ViewChild('dt') dt!: Table;
   productos: any[] = [];
@@ -43,92 +42,122 @@ export class ProductoComponent {
 
   categorias: any[] = [];
   imagen_seleccionado: any = null;
+  imagen_actual: string = "";
+  errors: any = {};
+  buscar: string = ''
 
-  constructor(){
+  constructor() {
     this.getProductos();
     this.getCategorias();
   }
 
-  openNew(){
+  openNew() {
+    this.productoForm.reset();
     this.productDialog = true;
   }
 
-  cargarProductos(event: any){
-    console.log(event)
+  cargarProductos(event: any) {
+    console.log(event);
     let page = event.first / event.rows + 1;
 
-    this.getProductos(page, event.rows)
-
+    this.getProductos(page, event.rows);
   }
 
-  getProductos(page: number = 1, limit: number = 5){
-
-    this.loading = true
-    this.productoService.listar(page, limit).subscribe(
+  getProductos(page: number = 1, limit: number = 5) {
+    this.loading = true;
+    this.productoService.listar(page, limit, this.buscar).subscribe(
       (res: any) => {
         console.log(res);
         this.productos = res.data;
         this.totalRecords = res.total;
 
-        this.loading = false
+        this.loading = false;
       },
       (error: any) => {
-        this.loading = false
+        this.loading = false;
       }
-    )
+    );
   }
 
-  getCategorias(){
-this.categoriaService.listar().subscribe(
-  (res: any) => {
-    this.categorias = res;
+  getCategorias() {
+    this.categoriaService.listar().subscribe((res: any) => {
+      this.categorias = res;
+    });
   }
-)
-  }
-  
+
   exportCSV(ev: any) {
     this.dt.exportCSV();
   }
 
-   editProduct(product: any){
+  editProduct(product: any) {
+    const { id, nombre, categoria_id, precio, stock, descripcion, imagen } = product;
+    this.productoForm.setValue({
+      id,
+      nombre,
+      categoria_id,
+      precio,
+      stock,
+      descripcion,
+    });
 
+    this.imagen_actual = 'http://127.0.0.1:8000/'+imagen;
+
+    this.productDialog = true;
   }
-   deleteProduct(product:any){
+  deleteProduct(product: any) {}
 
-  }
+  hideDialog() {}
 
-  hideDialog(){
-
-  }
-
-  saveProduct(){
-
+  saveProduct() {
     let nombre = this.productoForm.value.nombre;
     let precio = this.productoForm.value.precio;
     let stock = this.productoForm.value.stock;
     let categoria_id = this.productoForm.value.categoria_id;
     let descripcion = this.productoForm.value.descripcion;
-    
-    const formData = new FormData();
-    formData.append("nombre", `${nombre}`);
-    formData.append("precio", `${precio}`);
-    formData.append("stock", `${stock}`);
-    formData.append("categoria_id", `${categoria_id}`);
-    formData.append("descripcion", `${descripcion}`);
-    formData.append("imagen", this.imagen_seleccionado);
 
-    this.productoService.guardar(formData).subscribe(
-      (res) => {
-        console.log("Producto registrado");
-      }
-    )
-    
+    if(this.productoForm.value.id){
+      
+  
+      const id_prod = this.productoForm.value.id;
+      this.productoService.modificar(parseInt(id_prod), this.productoForm.value).subscribe((res) => {
+        console.log('Producto Modificado');
+        this.productDialog = false;
+        this.productoForm.reset();
+        this.getProductos();
+      }, (error: any) => {
+        console.log(error.error?.errors);
+        this.errors = error.error?.errors;
+      });
 
+    }else{
+      const formData = new FormData();
+      formData.append('nombre', nombre+'');
+      formData.append('precio', `${precio}`);
+      formData.append('stock', `${stock}`);
+      formData.append('categoria_id', `${categoria_id}`);
+      formData.append('descripcion', `${descripcion}`);
+      formData.append('imagen', this.imagen_seleccionado);
+  
+      this.productoService.guardar(formData).subscribe((res) => {
+        console.log('Producto registrado');
+        this.productDialog = false;
+        this.productoForm.reset();
+        this.getProductos();
+      }, (error: any) => {
+        console.log(error.error?.errors);
+        this.errors = error.error?.errors;
+      });
+
+    }
 
   }
 
-  funSeleccionarImagen(ev: any){
+  funSeleccionarImagen(ev: any) {
     console.log(ev.target.files[0]);
     this.imagen_seleccionado = ev.target.files[0];
+  }
+
+  funBuscar(){
+    this.getProductos();
   }
 }

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CategoriaComponent } from './components/inventario/categoria/categoria.component';
 import { ProductoComponent } from './components/inventario/producto/producto.component';
@@ -30,6 +30,7 @@ import { PrimeNgModuleModule } from '../prime-ng-module/prime-ng-module.module';
     CommonModule,
     AdminRoutingModule,
     ReactiveFormsModule, 
+    FormsModule,
     PrimeNgModuleModule
   ]
 })

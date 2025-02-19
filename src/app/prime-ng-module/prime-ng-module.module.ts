@@ -12,7 +12,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TextareaModule } from 'primeng/textarea'
 import { InputNumberModule } from 'primeng/inputnumber'
 import { RadioButtonModule } from 'primeng/radiobutton'
-
+import { ImageModule } from 'primeng/image';
 
 const componentes = [
   TableModule,
@@ -25,7 +25,8 @@ const componentes = [
   InputIconModule,
   TextareaModule,
   InputNumberModule,
-  RadioButtonModule
+  RadioButtonModule,
+  ImageModule
 
 ];
 

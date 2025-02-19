@@ -22,15 +22,15 @@ export class ProductoService {
   }
 
   mostrar(id:number){
-    return this.http.get(`${this.urlBase}/categoria/${id}`);
+    return this.http.get(`${this.urlBase}/producto/${id}`);
   }
 
   modificar(id:number, datos:any){
-    return this.http.put(`${this.urlBase}/categoria/${id}`, datos);
+    return this.http.put(`${this.urlBase}/producto/${id}`, datos);
   }
 
   eliminar(id:number){
-    return this.http.delete(`${this.urlBase}/categoria/${id}`);
+    return this.http.delete(`${this.urlBase}/producto/${id}`);
   }
 
 }

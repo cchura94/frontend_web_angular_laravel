@@ -5,13 +5,20 @@
 
     <ng-template #end>
        <p-button label="Exportar" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV($event)" />
+       <form (ngSubmit)="funBuscar()">
+           <input type="text" [(ngModel)]="buscar" >
+           
+           <button type="submit">BUSCAR</button>
+
+       </form>
     </ng-template>
 </p-toolbar>
 
 <p-table
     #dt
     [value]="productos"
-    [rows]="3"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
     [lazy] = "true"
     [totalRecords]="totalRecords"
     [loading]="loading"
@@ -50,7 +57,7 @@
             <p-sortIcon field="categoria" />
         </th>
         <th pSortableColumn="inventoryStatus" style="min-width: 12rem">
-            Estado
+            STOCK
             <p-sortIcon field="inventoryStatus" />
         </th>
         <th style="min-width: 12rem"></th>
@@ -64,12 +71,14 @@
         <td style="min-width: 2rem">{{ product.id }}</td>
         <td style="min-width: 8rem">{{ product.nombre }}</td>
         <td>
-            <img [src]="'http://127.0.0.1:8000/' + product.imagen" [alt]="product.nombre" style="width: 64px" class="rounded" />
+            @if (product.imagen) {
+                <p-image [src]="'http://127.0.0.1:8000/' + product.imagen" [alt]="product.nombre" width="100" class="rounded" [preview]="true" />
+            }
         </td>
         <td>{{ product.precio | currency: 'USD' }}</td>
         <td>{{ product.categoria.nombre }}</td>
         <td>
-            
+            {{ product.stock }}
         </td>
         <td>
             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" />
@@ -78,25 +87,30 @@
     </tr>
 </ng-template>
 <ng-template #summary>
-    <div class="flex items-center justify-between">In total there are {{ productos ? productos.length : 0 }} products.</div>
+    <div class="flex items-center justify-between">En TOtal son {{ productos ? productos.length : 0 }} Productos.</div>
 </ng-template>
 </p-table>
 
 <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Detalle de Producto" [modal]="true">
     <ng-template #content>
-        {{ productoForm.value | json }}
+        <!--{{ productoForm.value | json }}-->
+         {{ productoForm.valid }}
         <div class="flex flex-col gap-6" [formGroup]="productoForm">
-            <!--<img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-4" *ngIf="product.image" />-->
+            @if (imagen_actual) {
+                <img [src]="imagen_actual" [alt]="productoForm.value.nombre" class="block m-auto pb-4" width="300" />
+            }
             <div>
                 <label for="name" class="block font-bold mb-3">Nombre</label>
                 <input type="text" pInputText id="name" formControlName="nombre" required autofocus fluid />
                 <small class="text-red-500" *ngIf="submitted && !productoForm.value.nombre">Nombre es Obligatorio.</small>
+                <small class="text-red-500" *ngIf="errors.nombre">{{errors.nombre}}</small>
+
             </div>
             <div>
                 <label for="description" class="block font-bold mb-3">Descripción</label>
-                <textarea id="description" pTextarea formControlName="descripcion" required rows="3" cols="20" fluid></textarea>
+                <textarea id="description" pTextarea formControlName="descripcion" rows="3" cols="20" fluid></textarea>
             </div>
-            <input type="file" (change)="funSeleccionarImagen($event)">
+            <input type="file" (change)="funSeleccionarImagen($event)" *ngIf="!productoForm.value.id">
 
             <div>
                 <span class="block font-bold mb-4">Categoria</span>
@@ -109,6 +123,8 @@
                         </div>
                     }
                 </div>
+                <small class="text-red-500" *ngIf="errors.categoria_id">{{errors.categoria_id}}</small>
+
             </div>
 
             <div class="grid grid-cols-12 gap-4">
@@ -119,13 +135,14 @@
                 <div class="col-span-6">
                     <label for="cant" class="block font-bold mb-3">Stock</label>
                     <p-inputnumber id="cant" formControlName="stock" fluid />
+                    <small class="text-red-500" *ngIf="errors.stock">{{errors.stock}}</small>
                 </div>
             </div>
         </div>
     </ng-template>
 
     <ng-template #footer>
-        <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
-        <p-button label="Save" icon="pi pi-check" (click)="saveProduct()" />
+        <p-button label="Cancelar" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="Registrar Cambios" icon="pi pi-check" (click)="saveProduct()" [disabled]="!productoForm.valid" />
     </ng-template>
 </p-dialog>
