@@ -1,3 +1,5 @@
+<button type="button" (click)="descargarPDF()" pButton icon="pi pi-pdf" label="DESCARGAR PDF"></button>
+
 <p-table [value]="pedidos" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template #header>
         <tr>
@@ -27,7 +29,7 @@
 
             </td>
             <td>
-                <button type="button" (click)="showDialog(pedido)" pButton icon="pi pi-pdf" label="PDF"></button>
+                <button type="button" (click)="mostrarPedidoPDF(pedido.id)" pButton icon="pi pi-pdf" label="PDF"></button>
 
             </td>
         </tr>

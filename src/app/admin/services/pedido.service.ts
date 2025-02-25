@@ -22,5 +22,15 @@ guardar(datos:any){
 mostrar(id:number){
   return this.http.get(`${this.urlBase}/pedido/${id}`);
 }
+
+generarReportePedidos(){
+  return this.http.get(`${this.urlBase}/pedido/reporte-PDF`, {responseType: 'blob'});
+}
+
+generarReporteMostrarPedido(id: any){
+  return this.http.get(`${this.urlBase}/pedido/${id}/reporte-PDF-mostrar`, {responseType: 'blob'});
+}
+
+
   
 }

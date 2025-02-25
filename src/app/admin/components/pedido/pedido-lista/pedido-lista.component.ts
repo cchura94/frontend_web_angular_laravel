@@ -36,4 +36,38 @@ export class PedidoListaComponent {
     this.dialogVisible = true
   }
 
+  descargarPDF(){
+    this.pedidoService.generarReportePedidos().subscribe(
+      (res: Blob) => {
+
+        const url = window.URL.createObjectURL(res);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "documento_pedidos.pdf";
+        a.click();
+
+        window.URL.revokeObjectURL(url)
+
+      }
+    )
+  }
+
+  mostrarPedidoPDF(id: any){
+    this.pedidoService.generarReporteMostrarPedido(id).subscribe(
+      (res: Blob) => {
+
+        const url = window.URL.createObjectURL(res);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "pedido"+id+".pdf";
+        a.click();
+
+        window.URL.revokeObjectURL(url)
+
+      }
+    )
+  }
+
 }
