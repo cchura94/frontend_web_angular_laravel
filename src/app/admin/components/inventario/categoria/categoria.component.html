@@ -22,6 +22,7 @@
         </div>
     </p-dialog>
 
+    <p-progressbar mode="indeterminate" [style]="{ height: '12px' }" *ngIf="loading" />
     <p-table [value]="categorias" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>

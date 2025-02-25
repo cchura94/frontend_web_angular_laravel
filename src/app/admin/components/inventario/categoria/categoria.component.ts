@@ -14,6 +14,7 @@ export class CategoriaComponent {
 
   categorias: any[] = [];
   visible: boolean = false;
+  loading: boolean = false;
 
   categoriaForm = new FormGroup({
       id: new FormControl(''),
@@ -26,13 +27,16 @@ export class CategoriaComponent {
   }
 
   funListar(){
+    this.loading = true
     this.categoriaService.listar().subscribe(
       (data: any) => {
         console.log(data);
         this.categorias = data;
+        this.loading = false
       },
       (error: any) => {
         console.log(error);
+        this.loading = false
       }
     );
   }

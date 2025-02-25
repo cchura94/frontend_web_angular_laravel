@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { PedidoService } from '../../../services/pedido.service';
 
 @Component({
   selector: 'app-pedido-lista',
@@ -8,5 +9,31 @@ import { Component } from '@angular/core';
   styleUrl: './pedido-lista.component.scss'
 })
 export class PedidoListaComponent {
+  pedidos: any[] = [];
+  pedido: any = {};
+
+  pedidoService = inject(PedidoService);
+
+  dialogVisible: boolean = false;
+
+  constructor(){
+    this.getPedidos()
+  }
+
+  getPedidos(){
+    this.pedidoService.listar().subscribe(
+      (res: any) => {
+        this.pedidos = res.data;
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    )
+  }
+
+  showDialog(p: any){
+    this.pedido = p
+    this.dialogVisible = true
+  }
 
 }
